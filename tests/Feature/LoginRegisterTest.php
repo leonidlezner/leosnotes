@@ -11,12 +11,11 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class LoginRegisterTest extends TestCase
 {    
-    use DatabaseTransactions;
+    use DatabaseMigrations;
 
     public function test_guest_sees_login_form()
     {
         $response = $this->get('/login');
-
         $response->assertStatus(200);
     }
 
