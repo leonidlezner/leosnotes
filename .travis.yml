@@ -8,6 +8,17 @@ before_script:
   - mysql -e 'create database leosnotes_test;'
   - composer self-update
   - composer install --no-interaction
+  - php artisan key:generate
+  - php artisan migrate
 
 script:
   - vendor/bin/phpunit
+  - php artisan dusk
+
+services:
+  - mysql
+
+cache:
+  directories:
+    - node_modules
+    - vendor
