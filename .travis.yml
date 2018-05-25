@@ -13,7 +13,6 @@ before_script:
 
 script:
   - vendor/bin/phpunit
-  - php artisan dusk
 
 services:
   - mysql
