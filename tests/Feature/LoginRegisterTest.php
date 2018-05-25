@@ -16,6 +16,7 @@ class LoginRegisterTest extends TestCase
     public function test_guest_sees_login_form()
     {
         $response = $this->get('/login');
+        
         $response->assertStatus(200);
     }
 
