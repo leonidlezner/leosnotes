@@ -113,7 +113,7 @@ class LoginRegisterTest extends TestCase
         $response = $this->actingAs($user)->post('/logout');
 
         $response->assertStatus(302);
-
+        
         $this->assertGuest();
     }
 }
