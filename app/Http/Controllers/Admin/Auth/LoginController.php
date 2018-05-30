@@ -50,6 +50,7 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+        # TODO: Move the validation to the model or policy
         $this->validate($request, [
             'email'   => 'required|email',
             'password' => 'required|min:6'

@@ -5,22 +5,14 @@ namespace Tests\Browser;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\Browser\Traits\CleanCookies;
 
 class LoginTest extends DuskTestCase
 {
     use DatabaseMigrations;
+    use CleanCookies;
 
     private $homePath = '/home';
-
-    public function setUp()
-    {
-        parent::setUp();
-        
-        foreach (static::$browsers as $browser) {
-            $browser->driver->manage()->deleteAllCookies();
-        }
-    }
 
     public function test_user_can_register()
     {
