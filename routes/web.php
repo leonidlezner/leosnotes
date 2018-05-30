@@ -23,16 +23,21 @@ Auth::routes();
 
 # Let the logout be accessible via a GET request
 Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
-
 Route::get('/home', 'HomeController@index')->name('home');
 
 
-Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin'],
-              'namespace' => 'Admin', 'as' => 'admin.'], function() {
-
-    Route::group(['as' => 'dashboard.'], function () {
-        Route::get('/', 'DashboardController@index')->name('index');
-    });
+# Restricted Admin URLs
+Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin',
+                'namespace' => 'Admin', 'as' => 'admin.'], function() {
+                    
+    Route::get('/', 'DashboardController@index')->name('dashboard');
     
     Route::resource('users', 'UsersController');
+});
+
+# Admin Login URLs
+Route::group(['prefix' => 'admin', 'namespace' => 'Admin', 'as' => 'admin.'], function() {
+    Route::get('/login', 'Auth\LoginController@showLoginForm')->name('login');
+    Route::post('/login', 'Auth\LoginController@login')->name('login.submit');
+    Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 });

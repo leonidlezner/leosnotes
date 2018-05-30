@@ -17,7 +17,7 @@ class AdminLoginTest extends TestCase
         
         $response->assertStatus(302);
 
-        $response->assertRedirect('/login');
+        $response->assertRedirect('/admin/login');
     }
     
     public function test_user_can_not_use_dashboard()
@@ -26,11 +26,24 @@ class AdminLoginTest extends TestCase
 
         $response = $this->actingAs($user)->get('/admin');
 
-        $response->assertStatus(403);
+        $response->assertRedirect('/admin/login');
     }
 
-    public function _test_admin_can_login()
+    public function test_admin_can_login()
     {
-        
+        $admin = factory(\App\Admin::class)->create();
+
+        $response = $this->actingAs($admin, 'admin')->get('/admin');
+
+        $response->assertStatus(200);
+    }
+
+    public function test_admin_can_logout()
+    {
+        $admin = factory(\App\Admin::class)->create();
+
+        $response = $this->actingAs($admin, 'admin')->get('/admin/logout');
+
+        $response->assertRedirect('/admin/login');
     }
 }

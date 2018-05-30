@@ -12,10 +12,19 @@ class UserTest extends TestCase
 {
     use DatabaseMigrations;
 
-    public function test_user_is_admin()
+    public function ___test_user_is_not_admin()
+    {
+        $user = factory(\App\User::class)->create();
+        
+        #$this->assertFalse($user->isAdmin());
+    }
+
+    public function ___test_user_can_be_admin()
     {
         $user = factory(\App\User::class)->create();
 
-        $this->assertFalse($user->isAdmin());
+        
+
+        #$this->assertTrue($user->isAdmin());
     }
 }
