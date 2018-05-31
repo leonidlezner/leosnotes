@@ -82,6 +82,15 @@ class AdminLoginTest extends TestCase
         $response->assertRedirect('/admin/login');
     }
 
+    public function test_admin_can_post_logout()
+    {
+        $admin = factory(\App\Admin::class)->create();
+
+        $response = $this->actingAs($admin, 'admin')->post('/admin/logout');
+
+        $response->assertRedirect('/admin/login');
+    }
+
     public function test_guest_cannot_login()
     {
         $params = [
