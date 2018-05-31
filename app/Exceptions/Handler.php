@@ -71,14 +71,9 @@ class Handler extends ExceptionHandler
             return redirect()->guest(route($redirect_route));
         }
 
-        switch($guard[0])
+        if($guard[0] == 'admin')
         {
-            case 'admin':
-                $redirect_route = 'admin.login';
-                break;
-
-            default:
-                $redirect_route = 'login';
+            $redirect_route = 'admin.login';
         }
 
         return redirect()->guest(route($redirect_route));

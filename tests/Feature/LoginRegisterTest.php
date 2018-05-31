@@ -20,6 +20,15 @@ class LoginRegisterTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_guest_home_redirects_to_login()
+    {
+        $response = $this->get(route('home'));
+        
+        $response->assertStatus(302);
+
+        $response->assertRedirect('/login');
+    }
+
     public function test_guest_cannot_login()
     {
         $params = [
@@ -115,5 +124,31 @@ class LoginRegisterTest extends TestCase
         $response->assertStatus(302);
         
         $this->assertGuest();
+    }
+
+    public function test_admin_login_redicrects_to_dashboard()
+    {
+        $user = factory(\App\User::class)->create();
+
+        $response = $this->actingAs($user)->get('/login');
+        
+        $response->assertStatus(302);
+
+        $response->assertRedirect(route('home'));
+    }
+
+    public function test_guest_can_see_reset_password()
+    {
+        $response = $this->get('/password/reset');
+        
+        $response->assertStatus(200);
+    }
+
+    public function test_guest_can_reset_password()
+    {
+        # TODO: Perform the complete test
+        $response = $this->get('/password/reset/abcdefg');
+        
+        $response->assertStatus(200);
     }
 }

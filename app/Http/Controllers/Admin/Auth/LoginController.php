@@ -64,7 +64,7 @@ class LoginController extends Controller
 
         return redirect()->back()
                         ->withInput($request->only('email', 'remember'))
-                        ->with('error', 'Wrong username or password!');
+                        ->withErrors(['message' => 'Wrong username or password!']);
     }
 
     public function logout()

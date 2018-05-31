@@ -25,7 +25,6 @@ class RedirectIfAuthenticated
                 default:
                     return redirect(route('home'));
             }
-
         }
 
         return $next($request);
