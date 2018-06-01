@@ -12,7 +12,7 @@ class CreateAdmin extends Command
      *
      * @var string
      */
-    protected $signature = 'admin:create {name} {email}';
+    protected $signature = 'admin:create {name} {email} {--pass=}';
 
     /**
      * The console command description.
@@ -28,7 +28,19 @@ class CreateAdmin extends Command
      */
     public function __construct()
     {
+        $this->min_pass_len = 6;
         parent::__construct();
+    }
+
+    private function validate_password($password)
+    {
+        if (strlen($password) < $this->min_pass_len)
+        {
+            $this->error(sprintf('The password shall be at least %s charachters long!', $this->min_pass_len));
+            return false;
+        }
+
+        return true;
     }
 
     public function passwordPrompt($min_pass_len = 6)
@@ -41,9 +53,8 @@ class CreateAdmin extends Command
         {
             $password = $this->secret('Please enter the admin password');
 
-            if (strlen($password) < $min_pass_len)
+            if ($this->validate_password($password) == false)
             {
-                $this->error(sprintf('The password shall be at least %s charachters long!', $min_pass_len));
                 continue;
             }
 
@@ -69,15 +80,33 @@ class CreateAdmin extends Command
      */
     public function handle()
     {
+        $password = "";
+        $min_pass_len = 6;
         $existing_admin = \App\Admin::where('email', $this->argument('email'))->first();
 
         if($existing_admin)
         {
-            $this->error('Admin with this email is already in the database!');
-            return;
+            return $this->error('Admin with this email is already in the database!');
         }
 
-        $password = $this->passwordPrompt();
+        $pwd_from_cli = $this->option('pass');
+
+        if(strlen($pwd_from_cli) > 0)
+        {
+            if($this->validate_password($pwd_from_cli) == false)
+            {
+                return -1;
+            }
+            else
+            {
+                $password = $pwd_from_cli;
+            }
+        }
+        else
+        {
+            $password = $this->passwordPrompt($min_pass_len);
+        }
+
 
         $admin = new \App\Admin();
         $admin->password = Hash::make($password);
@@ -85,6 +114,6 @@ class CreateAdmin extends Command
         $admin->name = $this->argument('name');
         $admin->save();
 
-        $this->info('New admin created!');
+        return $this->info('New admin created!');
     }
 }
