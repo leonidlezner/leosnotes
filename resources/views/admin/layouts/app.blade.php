@@ -1,10 +1,6 @@
 @include('admin.inc.header')
 
 <main class="py-4">
-    <div class="container">
-        @include('admin.inc.messages')
-    </div>
-    
     <div class="container-fluid">
         <div class="row">
             <div class="col-3">
@@ -15,6 +11,8 @@
             </div>
             <div class="col-9">
                 <h1>@yield('title')</h1>
+                
+                @include('admin.inc.messages')
 
                 @yield('content')
             </div>

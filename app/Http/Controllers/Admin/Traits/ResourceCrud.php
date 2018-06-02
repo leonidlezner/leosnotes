@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin\Traits;
 
+use Illuminate\Http\Request;
+
 trait ResourceCrud
 {
     protected $model = '';
@@ -78,12 +80,36 @@ trait ResourceCrud
         ]);
     }
 
+
     public function trashed()
     {
         $items = $this->model::onlyTrashed()->orderBy('id', 'desc')->get();
 
         return view($this->viewIndex)->with([
             'items' => $items
+        ]);
+    }
+
+    public function create()
+    {
+        return view($this->viewCreate);
+    }
+
+    public function edit($id)
+    {
+        $item = $this->findOrAbort($id);
+
+        return view($this->viewEdit)->with(compact('item'));
+    }
+
+    public function store(Request $request)
+    {
+        $this->validate($request, $this->validationRules);
+
+        $item = $this->model->create($request->all());
+        
+        return redirect()->route($this->indexRoute)->with([
+            'success' => 'New item was created!'
         ]);
     }
 }
