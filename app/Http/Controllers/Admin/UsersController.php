@@ -4,17 +4,19 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\Traits\ResourceCrud;
+
 
 class UsersController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    use ResourceCrud;
+
+    public function __construct()
     {
-        return view('admin.users.index');
+        $this->model = '\App\User';
+        $this->indexRoute = 'admin.users.index';
+        $this->viewFolder = 'admin.users';
+        $this->setupCrud();
     }
 
     /**

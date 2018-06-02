@@ -1,5 +1,7 @@
 @extends('admin.layouts.app')
 
+@section('title', 'Dashboard')
+
 @section('content')
-Dashboard
+<p>Not content yet</p>
 @endsection
