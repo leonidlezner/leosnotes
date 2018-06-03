@@ -27,4 +27,16 @@ trait UsersAdmins
     {
         return Faker::create();
     }
+
+    private function fetchRole($id = null)
+    {
+        if($id == null)
+        {
+            return factory(\App\Role::class)->create();
+        }
+        else
+        {
+            return \App\Role::find($id);
+        }
+    }
 }

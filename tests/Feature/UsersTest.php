@@ -58,6 +58,15 @@ class UsersTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_get_users_trash()
+    {
+        $admin = $this->fetchAdmin();
+
+        $response = $this->actingAs($admin, 'admin')->get(route('admin.users.trash'));
+        
+        $response->assertStatus(200);
+    }
+
     public function test_create_user()
     {
         $admin = $this->fetchAdmin();
