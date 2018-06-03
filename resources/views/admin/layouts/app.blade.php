@@ -7,6 +7,7 @@
                 <div class="list-group">
                     <a class="list-group-item" href="{{ route('admin.dashboard') }}">Dashboard</a>
                     <a class="list-group-item" href="{{ route('admin.users.index') }}">Users</a>
+                    <a class="list-group-item" href="{{ route('admin.roles.index') }}">Roles</a>
                 </div>
             </div>
             <div class="col-9">

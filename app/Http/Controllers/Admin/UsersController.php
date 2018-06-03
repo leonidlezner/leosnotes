@@ -14,7 +14,7 @@ class UsersController extends Controller
 
     public function __construct()
     {
-        $this->model = '\App\User';
+        $this->model = \App\User::class;
         $this->indexRoute = 'admin.users.index';
         $this->trashRoute = 'admin.users.trash';
         $this->viewFolder = 'admin.users';

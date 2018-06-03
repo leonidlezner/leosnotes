@@ -37,8 +37,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin',
         Route::delete('/{user}/forcedelete', 'UsersController@forceDelete')->name('forcedelete');
         Route::get('/trash', 'UsersController@trash')->name('trash');
     });
-
     Route::resource('users', 'UsersController');
+
+    Route::group(['prefix' => 'roles', 'as' => 'roles.'], function() {
+        Route::post('/{role}/restore', 'RolesController@restore')->name('restore');
+        Route::delete('/{role}/forcedelete', 'RolesController@forceDelete')->name('forcedelete');
+        Route::get('/trash', 'RolesController@trash')->name('trash');
+    });
+    Route::resource('roles', 'RolesController');
 });
 
 # Admin Login URLs

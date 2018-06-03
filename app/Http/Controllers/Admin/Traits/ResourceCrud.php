@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 trait ResourceCrud
 {
-    protected $model = '';
+    protected $model = \Model::class;
     protected $indexRoute = '';
     protected $trashRoute = '';
     protected $authExcept = ['index', 'show'];
@@ -16,6 +16,7 @@ trait ResourceCrud
     protected $viewShow = '';
     protected $viewEdit = '';
     protected $validationRules = [];
+    protected $validationRuleIdSuffix = [];
     protected $items_per_page = 10;
 
     public function setupCrud()
@@ -137,7 +138,7 @@ trait ResourceCrud
     {
         $this->validate($request, $this->validationRules);
 
-        $item = $this->model->create($request->all());
+        $item = $this->model::create($request->all());
         
         return redirect()->route($this->getBackRoute($item))->with([
             'success' => sprintf('New %s was created!', $item)
@@ -147,6 +148,14 @@ trait ResourceCrud
 
     public function update(Request $request, $id)
     {
+        foreach($this->validationRuleIdSuffix as $rule)
+        {
+            if(key_exists($rule, $this->validationRules))
+            {
+                $this->validationRules[$rule] .= ','.$id;
+            }
+        }
+
         $this->validate($request, $this->validationRules);
 
         $item = $this->findOrAbort($id, true);
@@ -158,7 +167,7 @@ trait ResourceCrud
         ]);
     }
 
-
+    
     public function destroy($id)
     {
         $item = $this->findOrAbort($id, true);

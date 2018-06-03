@@ -1,13 +1,13 @@
 @extends('admin.layouts.app')
 
 @if(is_trash_route())
-@section('title', 'Trash: Users')
+@section('title', 'Trash: Roles')
 @else
-@section('title', 'Users')
+@section('title', 'Roles')
 @endif
 
 @section('content')
-    @include('admin.inc.index-nav', ['route_prefix' => 'admin.users.'])
+    @include('admin.inc.index-nav', ['route_prefix' => 'admin.roles.'])
 
     @if(count($items) > 0)
 
@@ -17,14 +17,16 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
+            <th>Title</th>
             <th>Action</th>
         </tr>
         
         @foreach($items as $item)
         <tr class="item-{{ $item->id }}">
             <td class="align-middle">{{ $item->id }}</td>
-            <td class="align-middle"><a href="{{ route('admin.users.show', ['id' => $item->id]) }}">{{ $item->name }}</a></td>
-            <td>@include('admin.inc.res-action', ['item' => $item, 'route_prefix' => 'admin.users.'])</td>
+            <td class="align-middle">{{ $item->name }}</td>
+            <td class="align-middle"><a href="{{ route('admin.roles.show', ['id' => $item->id]) }}">{{ $item->title }}</a></td>
+            <td>@include('admin.inc.res-action', ['item' => $item, 'route_prefix' => 'admin.roles.'])</td>
         </tr>
         @endforeach
     </table>
@@ -32,6 +34,6 @@
     @include('admin.inc.pagination')
 
     @else
-        <p>No users were found</p>
+        <p>No roles were found</p>
     @endif
 @endsection

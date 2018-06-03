@@ -25,6 +25,10 @@
         {{ Form::submit('Create', ['class' => 'btn btn-success']) }}
     @endif
 
+@if(isset($item) && $item->trashed())
+    <a href="{{ route('admin.users.trash') }}" class="btn btn-light">Cancel</a>
+@else
     <a href="{{ route('admin.users.index') }}" class="btn btn-light">Cancel</a>
+@endif
 
 {!! Form::close() !!}
