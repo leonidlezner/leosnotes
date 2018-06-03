@@ -112,4 +112,17 @@ trait ResourceCrud
             'success' => 'New item was created!'
         ]);
     }
+
+    public function update(Request $request, $id)
+    {
+        $this->validate($request, $this->validationRules);
+
+        $item = $this->findOrAbort($id);
+
+        $item->update($request->all());
+
+        return redirect()->route($this->indexRoute)->with([
+            'success' => 'The item was updated!'
+        ]);
+    }
 }
