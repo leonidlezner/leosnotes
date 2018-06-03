@@ -17,3 +17,9 @@
         {{session('error')}}
     </div>
 @endif
+
+@if(!isset($items) && isset($item) && $item->trashed())
+    <div class="alert alert-warning">
+        {{ $item }} is located in the Trash!
+    </div>
+@endif

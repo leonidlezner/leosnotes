@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Edit User "' . $item->name . '"')
+@section('title', 'Edit ' . $item)
 
 @section('content')
     @include('admin.users.form', ['item' => $item])

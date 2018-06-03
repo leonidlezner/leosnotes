@@ -203,4 +203,73 @@ class UsersTest extends TestCase
 
         $this->assertEquals($old_password, $user->password);           
     }
+
+    public function test_soft_delete_user()
+    {
+        $admin = $this->fetchAdmin();
+        $user = $this->fetchUser();
+
+        $response = $this->actingAs($admin, 'admin')
+                         ->delete(route('admin.users.destroy', ['id' => $user->id]));
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+
+        $this->assertSoftDeleted('users', [
+            'email' => $user->email,
+            'name' => $user->name,
+            'password' => $user->password
+        ]);
+
+        $user = $this->fetchUser($user->id);
+        $this->assertTrue(is_null($user));
+    }
+
+    public function test_soft_restore_user()
+    {
+        $admin = $this->fetchAdmin();
+        $user = $this->fetchUser();
+
+        $user->delete();
+
+        $this->assertSoftDeleted('users', [
+            'email' => $user->email,
+            'name' => $user->name,
+            'password' => $user->password
+        ]);
+
+        $response = $this->actingAs($admin, 'admin')
+                         ->post(route('admin.users.restore', ['id' => $user->id]));
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+
+        $restored_user = $this->fetchUser($user->id);
+
+        $this->assertEquals($restored_user->email, $user->email);
+    }
+
+    public function test_force_delete_user()
+    {
+        $admin = $this->fetchAdmin();
+        $user = $this->fetchUser();
+
+        $user->delete();
+
+        $this->assertSoftDeleted('users', [
+            'email' => $user->email,
+            'name' => $user->name,
+            'password' => $user->password
+        ]);
+
+        $response = $this->actingAs($admin, 'admin')
+                         ->delete(route('admin.users.forcedelete', ['id' => $user->id]));
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+
+        $restored_user = \App\User::withTrashed()->find($user->id);
+
+        $this->assertTrue(is_null($restored_user));
+    }
 }

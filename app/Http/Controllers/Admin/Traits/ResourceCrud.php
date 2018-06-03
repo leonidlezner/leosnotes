@@ -8,6 +8,7 @@ trait ResourceCrud
 {
     protected $model = '';
     protected $indexRoute = '';
+    protected $trashRoute = '';
     protected $authExcept = ['index', 'show'];
     protected $viewFolder = '';
     protected $viewIndex = '';
@@ -44,6 +45,7 @@ trait ResourceCrud
 
         assert($this->model != '');
         assert($this->indexRoute != '');
+        assert($this->trashRoute != '');
         assert($this->viewIndex != '');
         assert($this->viewCreate != '');
         assert($this->viewShow != '');
@@ -53,6 +55,8 @@ trait ResourceCrud
 
     protected function findOrAbort($id, $includeTrashed = false)
     {
+        $resource = null;
+
         if($includeTrashed)
         {
             $resource = $this->model::withTrashed()->find($id);
@@ -70,6 +74,22 @@ trait ResourceCrud
         return $resource;
     }
 
+    public function getBackRoute($item = null)
+    {
+        if($item == null)
+        {
+            return $this->indexRoute;
+        }
+
+        if($item->trashed())
+        {
+            return $this->trashRoute;
+        }
+        else
+        {
+            return $this->indexRoute;
+        }
+    }
 
     public function index()
     {
@@ -81,26 +101,37 @@ trait ResourceCrud
     }
 
 
-    public function trashed()
+    public function trash()
     {
-        $items = $this->model::onlyTrashed()->orderBy('id', 'desc')->get();
+        $items = $this->model::onlyTrashed()->orderBy('id', 'desc')->paginate($this->items_per_page);
 
         return view($this->viewIndex)->with([
             'items' => $items
         ]);
     }
 
+
     public function create()
     {
         return view($this->viewCreate);
     }
 
+
     public function edit($id)
     {
-        $item = $this->findOrAbort($id);
+        $item = $this->findOrAbort($id, true);
 
         return view($this->viewEdit)->with(compact('item'));
     }
+
+
+    public function show($id)
+    {
+        $item = $this->findOrAbort($id, true);
+
+        return view($this->viewShow)->with(compact('item'));
+    }
+
 
     public function store(Request $request)
     {
@@ -108,21 +139,58 @@ trait ResourceCrud
 
         $item = $this->model->create($request->all());
         
-        return redirect()->route($this->indexRoute)->with([
-            'success' => 'New item was created!'
+        return redirect()->route($this->getBackRoute($item))->with([
+            'success' => sprintf('New %s was created!', $item)
         ]);
     }
+
 
     public function update(Request $request, $id)
     {
         $this->validate($request, $this->validationRules);
 
-        $item = $this->findOrAbort($id);
+        $item = $this->findOrAbort($id, true);
 
         $item->update($request->all());
 
-        return redirect()->route($this->indexRoute)->with([
-            'success' => 'The item was updated!'
+        return redirect()->route($this->getBackRoute($item))->with([
+            'success' => sprintf('The %s was updated!', $item)
+        ]);
+    }
+
+
+    public function destroy($id)
+    {
+        $item = $this->findOrAbort($id, true);
+
+        $item->delete();
+
+        return redirect()->route($this->getBackRoute($item))->with([
+            'success' => sprintf('The %s was trashed!', $item)
+        ]);
+    }
+
+
+    public function restore($id)
+    {
+        $item = $this->findOrAbort($id, true);
+
+        $item->restore();
+
+        return redirect()->route($this->getBackRoute($item))->with([
+            'success' => sprintf('The %s was restored!', $item)
+        ]);
+    }
+
+
+    public function forceDelete($id)
+    {
+        $item = $this->findOrAbort($id, true);
+
+        $item->forceDelete();
+
+        return redirect()->route($this->getBackRoute($item))->with([
+            'success' => sprintf('The %s was deleted!', $item)
         ]);
     }
 }

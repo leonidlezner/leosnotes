@@ -16,6 +16,7 @@ class UsersController extends Controller
     {
         $this->model = '\App\User';
         $this->indexRoute = 'admin.users.index';
+        $this->trashRoute = 'admin.users.trash';
         $this->viewFolder = 'admin.users';
 
         $this->validationRules = [
@@ -39,12 +40,10 @@ class UsersController extends Controller
             $request->merge(['password' => Hash::make(str_random(15))]);
         }
 
-
         $item = $this->model::create($request->all());
         
-
-        return redirect()->route($this->indexRoute)->with([
-            'success' => sprintf('New user "%s" was created!', $item->name)
+        return redirect()->route($this->getBackRoute($item))->with([
+            'success' => sprintf('New %s was created!', $item)
         ]);
     }
 
@@ -55,7 +54,7 @@ class UsersController extends Controller
 
         $this->validate($request, $this->validationRules);
 
-        $item = $this->findOrAbort($id);
+        $item = $this->findOrAbort($id, true);
 
         if(strlen($request->password) > 0)
         {
@@ -68,9 +67,8 @@ class UsersController extends Controller
 
         $item->update($request->all());
 
-        return redirect()->route($this->indexRoute)->with([
-            'success' => sprintf('The user "%s" was updated!', $item->name)
+        return redirect()->route($this->getBackRoute($item))->with([
+            'success' => sprintf('The %s was updated!', $item)
         ]);
     }
-
 }

@@ -32,6 +32,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin',
                     
     Route::get('/', 'DashboardController@index')->name('dashboard');
     
+    Route::group(['prefix' => 'users', 'as' => 'users.'], function() {
+        Route::post('/{user}/restore', 'UsersController@restore')->name('restore');
+        Route::delete('/{user}/forcedelete', 'UsersController@forceDelete')->name('forcedelete');
+        Route::get('/trash', 'UsersController@trash')->name('trash');
+    });
+
     Route::resource('users', 'UsersController');
 });
 

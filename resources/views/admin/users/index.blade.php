@@ -1,11 +1,18 @@
 @extends('admin.layouts.app')
 
+@if(is_trash_route())
+@section('title', 'Trash: Users')
+@else
 @section('title', 'Users')
+@endif
 
 @section('content')
+    @if(!is_trash_route())
     <div class="crud-navbar pt-2 pb-4">
         <a href="{{ route('admin.users.create') }}" class="btn btn-success">New user</a>
+        <a href="{{ route('admin.users.trash') }}" class="btn btn-light">Deleted users</a>
     </div>
+    @endif
 
     @if(count($items) > 0)
 
