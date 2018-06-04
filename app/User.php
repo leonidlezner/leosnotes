@@ -36,10 +36,14 @@ class User extends Authenticatable
         return sprintf('User "%s"', $this->name);
     }
     
-    /*
     public function roles()
     {
         return $this->belongsToMany(\App\Role::class);
     }
-    */
+
+    public function forceDelete()
+    {
+        $this->roles()->detach();
+        return parent::forceDelete();
+    }
 }

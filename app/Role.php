@@ -20,4 +20,15 @@ class Role extends Model
     {
         return sprintf('Role "%s"', $this->title);
     }
+    
+    public function users()
+    {
+        return $this->belongsToMany(\App\User::class);
+    }
+
+    public function forceDelete()
+    {
+        $this->users()->detach();
+        return parent::forceDelete();
+    }
 }

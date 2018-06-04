@@ -54,19 +54,12 @@ trait ResourceCrud
     }
 
 
-    protected function findOrAbort($id, $includeTrashed = false)
+    protected function findOrAbort($id)
     {
         $resource = null;
 
-        if($includeTrashed)
-        {
-            $resource = $this->model::withTrashed()->find($id);
-        }
-        else
-        {
-            $resource = $this->model::find($id);
-        }
-        
+        $resource = $this->model::withTrashed()->find($id);
+
         if(!$resource)
         {
             abort(404, 'Resource not found');
@@ -75,13 +68,8 @@ trait ResourceCrud
         return $resource;
     }
 
-    public function getBackRoute($item = null)
+    public function getBackRoute($item)
     {
-        if($item == null)
-        {
-            return $this->indexRoute;
-        }
-
         if($item->trashed())
         {
             return $this->trashRoute;
@@ -120,7 +108,7 @@ trait ResourceCrud
 
     public function edit($id)
     {
-        $item = $this->findOrAbort($id, true);
+        $item = $this->findOrAbort($id);
 
         return view($this->viewEdit)->with(compact('item'));
     }
@@ -128,7 +116,7 @@ trait ResourceCrud
 
     public function show($id)
     {
-        $item = $this->findOrAbort($id, true);
+        $item = $this->findOrAbort($id);
 
         return view($this->viewShow)->with(compact('item'));
     }
@@ -158,7 +146,7 @@ trait ResourceCrud
 
         $this->validate($request, $this->validationRules);
 
-        $item = $this->findOrAbort($id, true);
+        $item = $this->findOrAbort($id);
 
         $item->update($request->all());
 
@@ -170,7 +158,7 @@ trait ResourceCrud
     
     public function destroy($id)
     {
-        $item = $this->findOrAbort($id, true);
+        $item = $this->findOrAbort($id);
 
         $item->delete();
 
@@ -182,7 +170,7 @@ trait ResourceCrud
 
     public function restore($id)
     {
-        $item = $this->findOrAbort($id, true);
+        $item = $this->findOrAbort($id);
 
         $item->restore();
 
@@ -194,7 +182,7 @@ trait ResourceCrud
 
     public function forceDelete($id)
     {
-        $item = $this->findOrAbort($id, true);
+        $item = $this->findOrAbort($id);
 
         $item->forceDelete();
 

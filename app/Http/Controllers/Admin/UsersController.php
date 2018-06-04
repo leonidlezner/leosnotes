@@ -54,7 +54,7 @@ class UsersController extends Controller
 
         $this->validate($request, $this->validationRules);
 
-        $item = $this->findOrAbort($id, true);
+        $item = $this->findOrAbort($id);
 
         if(strlen($request->password) > 0)
         {
