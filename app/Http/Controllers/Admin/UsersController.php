@@ -22,6 +22,7 @@ class UsersController extends Controller
         $this->validationRules = [
             'name' => 'required',
             'email' => 'required|unique:users,email',
+            'roles' => 'exists:roles,id'
         ];
 
         $this->setupCrud();
@@ -47,6 +48,7 @@ class UsersController extends Controller
         ]);
     }
 
+    
     public function update(Request $request, $id)
     {
         # Ignore the user id during the email validation
@@ -63,6 +65,15 @@ class UsersController extends Controller
         else
         {
             $request->merge(['password' => $item->password]);
+        }
+
+        if($request->roles)
+        {
+            $item->roles()->sync(array_values($request->roles));
+        }
+        else
+        {
+            $item->roles()->detach();
         }
 
         $item->update($request->all());

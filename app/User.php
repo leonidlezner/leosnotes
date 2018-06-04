@@ -41,9 +41,16 @@ class User extends Authenticatable
         return $this->belongsToMany(\App\Role::class);
     }
 
-    public function forceDelete()
+    protected static function boot()
     {
-        $this->roles()->detach();
-        return parent::forceDelete();
+        parent::boot();
+
+        static::deleting(function($user)
+        {
+            if ($user->isForceDeleting())
+            {
+                $user->roles()->detach();
+            }
+        });
     }
 }

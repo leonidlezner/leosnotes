@@ -281,4 +281,74 @@ class UsersTest extends TestCase
 
         $this->assertTrue(is_null($restored_user));
     }
+
+
+    public function test_update_user_roles()
+    {
+        $admin = $this->fetchAdmin();
+        $user = $this->fetchUser();
+        $faker = $this->fetchFaker();
+
+        $roles = factory(\App\Role::class, 10)->create();
+
+        $response = $this->actingAs($admin, 'admin')
+                         ->put(route('admin.users.update', ['id' => $user->id]), [
+            'name' => $user->name,
+            'email' => $user->email,
+            'roles' => [
+                '4' => $roles[0]->id,
+                '6' => $roles[1]->id,
+                '8' => $roles[2]->id,
+                '9' => $roles[3]->id,
+            ]
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+
+        $this->assertEquals(4, count($user->roles));
+    }
+
+    public function test_detach_user_roles()
+    {
+        $admin = $this->fetchAdmin();
+        $user = $this->fetchUser();
+        $faker = $this->fetchFaker();
+
+        $roles = factory(\App\Role::class, 10)->create();
+
+        $user->roles()->attach($roles);
+
+        $response = $this->actingAs($admin, 'admin')
+                         ->put(route('admin.users.update', ['id' => $user->id]), [
+            'name' => $user->name,
+            'email' => $user->email,
+            'roles' => [
+            ]
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+
+        $this->assertEquals(0, count($user->roles));
+    }
+
+    public function test_wrong_user_roles()
+    {
+        $admin = $this->fetchAdmin();
+        $user = $this->fetchUser();
+        $faker = $this->fetchFaker();
+
+        $response = $this->actingAs($admin, 'admin')
+                         ->put(route('admin.users.update', ['id' => $user->id]), [
+            'name' => $user->name,
+            'email' => $user->email,
+            'roles' => [
+                '9' => 100,
+            ]
+        ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors();
+    }
 }

@@ -26,9 +26,16 @@ class Role extends Model
         return $this->belongsToMany(\App\User::class);
     }
 
-    public function forceDelete()
+    protected static function boot()
     {
-        $this->users()->detach();
-        return parent::forceDelete();
+        parent::boot();
+
+        static::deleting(function($role)
+        {
+            if ($role->isForceDeleting())
+            {
+                $role->users()->detach();
+            }
+        });
     }
 }

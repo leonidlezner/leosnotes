@@ -18,6 +18,19 @@
         {{ Form::label('password', 'Password') }}
         {{ Form::password('password', ['class' => 'form-control']) }}
     </div>
+
+    @if(\App\Role::count())
+    <h2>Roles</h2>
+    <ul class="form-check">
+        @foreach(\App\Role::all() as $role)
+        <li>
+            {{ Form::checkbox('roles[]', $role->id, $item->roles->contains($role), ['class' => 'form-check-input', 'id' => 'role-' . $role->id]) }} 
+            {{ Form::label('role-' . $role->id, $role->title) }}
+        </li>
+        @endforeach
+    </ul>
+    @endif
+
     
     @if(isset($item))
         {{ Form::submit('Update', ['class' => 'btn btn-primary']) }}
