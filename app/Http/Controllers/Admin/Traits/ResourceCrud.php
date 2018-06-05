@@ -18,6 +18,7 @@ trait ResourceCrud
     protected $validationRules = [];
     protected $validationRuleIdSuffix = [];
     protected $items_per_page = 10;
+    protected $listWith = null;
 
     public function setupCrud()
     {
@@ -82,7 +83,14 @@ trait ResourceCrud
 
     public function index()
     {
-        $items = $this->model::orderBy('id', 'desc')->paginate($this->items_per_page);
+        $model = $this->model::orderBy('id', 'desc');
+
+        if($this->listWith)
+        {
+            $model = $model->with($this->listWith);
+        }
+
+        $items = $model->paginate($this->items_per_page);
         
         return view($this->viewIndex)->with([
             'items' => $items

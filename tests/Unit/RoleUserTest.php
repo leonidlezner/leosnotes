@@ -67,4 +67,26 @@ class RoleUserTest extends TestCase
             'role_id' => $roles[0]->id
         ]);
     }
+
+    public function test_check_if_user_has_role()
+    {
+        $user = $this->fetchUser();
+
+        $roles = [];
+
+        $roles []= $this->fetchRole();
+        $roles []= $this->fetchRole();
+        $roles []= $this->fetchRole();
+        $roles []= $this->fetchRole();
+
+        $user->roles()->attach($roles[0]);
+        $user->roles()->attach($roles[1]);
+        $user->roles()->attach($roles[2]);
+        
+        $this->assertTrue($user->hasRole($roles[0]->name));
+        $this->assertTrue($user->hasRole($roles[1]->name));
+        $this->assertTrue($user->hasRole($roles[2]->name));
+
+        $this->assertFalse($user->hasRole($roles[3]->name));
+    }
 }

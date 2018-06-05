@@ -31,16 +31,6 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function __toString()
-    {
-        return sprintf('User "%s"', $this->name);
-    }
-    
-    public function roles()
-    {
-        return $this->belongsToMany(\App\Role::class);
-    }
-
     protected static function boot()
     {
         parent::boot();
@@ -52,5 +42,21 @@ class User extends Authenticatable
                 $user->roles()->detach();
             }
         });
+    }
+
+    public function __toString()
+    {
+        return sprintf('User "%s"', $this->name);
+    }
+    
+    public function roles()
+    {
+        return $this->belongsToMany(\App\Role::class);
+    }
+
+    public function hasRole($role_name)
+    {
+        $role = $this->roles->where('name', $role_name);
+        return (count($role) > 0);
     }
 }

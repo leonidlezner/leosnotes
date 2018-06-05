@@ -8,7 +8,7 @@
     <p>Name: {{ $item->name }}</p>
     <p>E-Mail: {{ $item->email }}</p>
 
-    @if($item->roles)
+    @if(count($item->roles))
         <h2>Roles</h2>
 
         <ul>
@@ -19,5 +19,4 @@
     @endif
 
     @include('admin.inc.res-action', ['item' => $item, 'route_prefix' => 'admin.users.'])
-    
 @endsection

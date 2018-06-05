@@ -18,6 +18,7 @@ class UsersController extends Controller
         $this->indexRoute = 'admin.users.index';
         $this->trashRoute = 'admin.users.trash';
         $this->viewFolder = 'admin.users';
+        $this->listWith = 'roles';
 
         $this->validationRules = [
             'name' => 'required',
