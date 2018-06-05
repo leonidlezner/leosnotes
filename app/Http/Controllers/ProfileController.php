@@ -15,6 +15,8 @@ class ProfileController extends Controller
     {
         $user = \App\User::withUuid($uuid)->firstOrFail();
         
-        return view('profile.show')->compact('user');
+        return view('profile.show')->with([
+            'item' => $user
+        ]);
     }
 }
