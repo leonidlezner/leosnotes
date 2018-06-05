@@ -19,4 +19,29 @@ class ProfileController extends Controller
             'item' => $user
         ]);
     }
+
+    public function edit()
+    {
+        $user = auth()->user();
+        
+        return view('profile.edit')->with([
+            'item' => $user
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+        $user = auth()->user();
+
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|unique:users,email,' . $user->id
+        ]);
+
+        $user->update($request->all());
+
+        return redirect()->route('profile.index')->with([
+            'success' => 'Your profile was updated!'
+        ]);
+    }
 }

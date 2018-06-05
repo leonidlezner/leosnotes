@@ -37,6 +37,8 @@ Route::group(['prefix' => 'profile', 'middleware' => 'auth',
     });*/
 
     Route::get('/', 'ProfileController@index')->name('index');
+    Route::get('/edit', 'ProfileController@edit')->name('edit');
+    Route::put('/edit', 'ProfileController@update')->name('update');
     Route::get('/{uuid}', 'ProfileController@show')->name('show');
 });
 

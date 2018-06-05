@@ -4,10 +4,19 @@
 
 @section('content')
     
+    
 
-    <div class="card">
+    <div class="card mt-3">
         <h5 class="card-header">{{ $item->name }}</h5>
+        
+        @if(auth()->user()->id == $item->id)
+            <div class="card-body">    
+                <a href="{{ route('profile.edit') }}" class="btn btn-primary">Edit profile</a>
+            </div>
+        @endif
+
         <div class="card-body row">
+            
             <div class="col-8">
                 <h5 class="card-title">About</h5>
                 <p class="card-text">{{ $item->about }}</p>
