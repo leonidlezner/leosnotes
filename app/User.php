@@ -5,11 +5,13 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use \App\Traits\RandomId;
 
 class User extends Authenticatable
 {
     use Notifiable;
     use SoftDeletes;
+    use RandomId;
 
     protected $dates = ['deleted_at'];
 
@@ -19,7 +21,16 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 
+        'email',
+        'password',
+        'about',
+        'language',
+        'location', 
+        'facebook_profile_url', 
+        'twitter_profile_url',
+        'linkedin_profile_url',
+        'yammer_profile_url',
     ];
 
     /**
@@ -34,6 +45,10 @@ class User extends Authenticatable
     protected static function boot()
     {
         parent::boot();
+
+        static::created(function($user) {
+            $user->generateUniqueId();
+        });
 
         static::deleting(function($user)
         {
