@@ -14,8 +14,15 @@ class AddUniqueidToUser extends Migration
     public function up()
     {
         Schema::table('users', function ($table) {
-            $table->string('uuid')->after('id')->nullable();
+            $table->string('uuid')->after('id')->nullable()->unique();
         });
+
+        $users = \App\User::withTrashed()->get();
+
+        foreach($users as $user)
+        {
+            $user->generateUniqueId();
+        }
     }
 
     /**
