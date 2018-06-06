@@ -15,6 +15,27 @@
     </div>
 
     <div class="form-group">
+        {{ Form::label('about', 'About') }}
+        {{ Form::textarea('about', null, ['class' => 'form-control']) }}
+    </div>
+
+    <div class="form-group">
+        {{ Form::label('twitter_profile_url', 'Twitter') }}
+        {{ Form::text('twitter_profile_url', null, ['class' => 'form-control']) }}
+    </div>
+
+    <div class="form-group">
+        {{ Form::label('facebook_profile_url', 'Facebook') }}
+        {{ Form::text('facebook_profile_url', null, ['class' => 'form-control']) }}
+    </div>
+
+    <div class="form-group">
+        {{ Form::label('yammer_profile_url', 'Yammer') }}
+        {{ Form::text('yammer_profile_url', null, ['class' => 'form-control']) }}
+    </div>
+
+
+    <div class="form-group">
         {{ Form::label('password', 'Password') }}
         {{ Form::password('password', ['class' => 'form-control']) }}
     </div>

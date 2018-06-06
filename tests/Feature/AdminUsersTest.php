@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 /**
  * @group users
  */
-class UsersTest extends TestCase
+class AdminUsersTest extends TestCase
 {
     use DatabaseMigrations;
     use UsersAdmins;
@@ -289,6 +289,8 @@ class UsersTest extends TestCase
         $user = $this->fetchUser();
         $faker = $this->fetchFaker();
 
+        $faker->seed(1234);
+        
         $roles = factory(\App\Role::class, 10)->create();
 
         $response = $this->actingAs($admin, 'admin')

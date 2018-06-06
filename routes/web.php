@@ -26,6 +26,30 @@ Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/home', 'HomeController@index')->name('home');
 
 
+Route::group(['prefix' => 'profile', 'middleware' => 'auth',
+                'as' => 'profile.'], function() {
+    
+    /*
+    Route::group(['prefix' => 'roles', 'as' => 'roles.'], function() {
+        Route::post('/{role}/restore', 'RolesController@restore')->name('restore');
+        Route::delete('/{role}/forcedelete', 'RolesController@forceDelete')->name('forcedelete');
+        Route::get('/trash', 'RolesController@trash')->name('trash');
+    });*/
+
+    Route::get('/', 'ProfileController@index')->name('index');
+    Route::get('/edit', 'ProfileController@edit')->name('edit');
+    Route::put('/edit', 'ProfileController@update')->name('update');
+    
+    Route::group(['prefix' => 'password', 'as' => 'password.'], function() {
+        Route::get('/', 'ProfileController@passwordEdit')->name('edit');
+        Route::put('/update', 'ProfileController@passwordUpdate')->name('update');
+    });
+
+    Route::get('/{uuid}', 'ProfileController@show')->name('show');
+});
+
+
+
 # Restricted Admin URLs
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin',
                 'namespace' => 'Admin', 'as' => 'admin.'], function() {
