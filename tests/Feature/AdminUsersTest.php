@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 /**
  * @group users
  */
-class UsersTest extends TestCase
+class AdminUsersTest extends TestCase
 {
     use DatabaseMigrations;
     use UsersAdmins;

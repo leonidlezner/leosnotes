@@ -48,4 +48,76 @@ class ProfileTest extends TestCase
         $response = $this->actingAs($user)->get(route('profile.show', ['uuid' => $userB->uuid]));
         $response->assertStatus(200);
     }
+
+    public function test_user_can_update_profile()
+    {
+        $user = $this->fetchUser();
+        $faker = $this->fetchFaker();
+
+        $new_mail = $faker->unique()->safeEmail;
+        $new_name = $faker->name;
+        $new_about = $faker->text;
+
+        $response = $this->actingAs($user)
+                            ->put(route('profile.update'), [
+                                'name' => $new_name,
+                                'email' => $new_mail,
+                                'about' => $new_about,
+                            ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+
+        $this->assertEquals($user->name, $new_name);
+        $this->assertEquals($user->email, $new_mail);
+        $this->assertEquals($user->about, $new_about);
+        
+        # Check if the same email is accepter by the validator
+        $response = $this->actingAs($user)
+                ->put(route('profile.update'), [
+                    'name' => $new_name,
+                    'email' => $user->email
+                ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+    }
+
+    public function test_user_can_update_password()
+    {
+        $user = $this->fetchUser();
+        $faker = $this->fetchFaker();
+
+        $new_pass = $faker->password;
+
+        $response = $this->actingAs($user)
+                            ->put(route('profile.password.update'), [
+                                'current_password' => 'secret',
+                                'password' => $new_pass,
+                                'password_confirmation' => $new_pass,
+                            ]);
+        
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+
+        $this->assertTrue(Hash::check($new_pass, $user->password));
+    }
+
+    public function test_user_cannot_update_with_wrong_password()
+    {
+        $user = $this->fetchUser();
+        $faker = $this->fetchFaker();
+
+        $new_pass = $faker->password;
+
+        $response = $this->actingAs($user)
+                            ->put(route('profile.password.update'), [
+                                'current_password' => 'blabla',
+                                'password' => $new_pass,
+                                'password_confirmation' => $new_pass,
+                            ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors();
+    }
 }

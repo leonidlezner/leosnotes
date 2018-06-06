@@ -43,6 +43,11 @@
                 {{ Form::text('yammer_profile_url', null, ['class' => 'form-control']) }}
             </div>
 
+            <div class="form-group">
+                {{ Form::label('linkedin_profile_url', 'LinkedIn') }}
+                {{ Form::text('linkedin_profile_url', null, ['class' => 'form-control']) }}
+            </div>
+
             {{ Form::submit('Update', ['class' => 'btn btn-primary']) }}
             <a href="{{ route('profile.index') }}" class="btn btn-light">Cancel</a>
 

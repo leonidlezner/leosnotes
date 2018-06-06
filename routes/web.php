@@ -39,6 +39,12 @@ Route::group(['prefix' => 'profile', 'middleware' => 'auth',
     Route::get('/', 'ProfileController@index')->name('index');
     Route::get('/edit', 'ProfileController@edit')->name('edit');
     Route::put('/edit', 'ProfileController@update')->name('update');
+    
+    Route::group(['prefix' => 'password', 'as' => 'password.'], function() {
+        Route::get('/', 'ProfileController@passwordEdit')->name('edit');
+        Route::put('/update', 'ProfileController@passwordUpdate')->name('update');
+    });
+
     Route::get('/{uuid}', 'ProfileController@show')->name('show');
 });
 
