@@ -42,6 +42,25 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public static function validationRules($except = null)
+    {
+        $rules = [
+            'name' => 'required',
+            'email' => 'required|unique:users,email', # the id has to be added in controller
+            'roles' => 'exists:roles,id',
+            'facebook_profile_url' => 'nullable|url', 
+            'twitter_profile_url' => 'nullable|url',
+            'linkedin_profile_url' => 'nullable|url',
+            'yammer_profile_url' => 'nullable|url',
+        ];
+
+        if($except) {
+            $rules = array_except($rules, $except);
+        }
+
+        return $rules;
+    }
+
     protected static function boot()
     {
         parent::boot();

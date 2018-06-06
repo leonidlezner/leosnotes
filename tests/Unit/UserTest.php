@@ -44,4 +44,16 @@ class UserTest extends TestCase
 
         $this->assertEquals($user->id, $u->id);
     }
+
+    public function test_validation_rules()
+    {
+        $rules = \App\User::validationRules();
+        $rules2 = \App\User::validationRules(['email']);
+
+        $this->assertTrue(count($rules) > 0);
+
+        $this->assertTrue(key_exists('email', $rules));
+        
+        $this->assertFalse(key_exists('email', $rules2));
+    }
 }

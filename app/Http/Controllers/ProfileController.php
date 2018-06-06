@@ -35,10 +35,10 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
 
-        $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required|unique:users,email,' . $user->id
-        ]);
+        $validationRules = \App\User::validationRules(['roles']);
+        $validationRules['email'] .= ','.$user->id;
+
+        $this->validate($request, $validationRules);
 
         $user->update($request->all());
 

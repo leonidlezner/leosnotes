@@ -20,11 +20,7 @@ class UsersController extends Controller
         $this->viewFolder = 'admin.users';
         $this->listWith = 'roles';
 
-        $this->validationRules = [
-            'name' => 'required',
-            'email' => 'required|unique:users,email',
-            'roles' => 'exists:roles,id'
-        ];
+        $this->validationRules = \App\User::validationRules();
 
         $this->setupCrud();
     }
