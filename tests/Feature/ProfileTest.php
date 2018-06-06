@@ -38,6 +38,12 @@ class ProfileTest extends TestCase
 
         $response = $this->actingAs($user)->get(route('profile.index'));
         $response->assertStatus(200);
+
+        $response = $this->actingAs($user)->get(route('profile.edit'));
+        $response->assertStatus(200);
+
+        $response = $this->actingAs($user)->get(route('profile.password.edit'));
+        $response->assertStatus(200);
     }
 
     public function test_user_can_access_some_profile()
